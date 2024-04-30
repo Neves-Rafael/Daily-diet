@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts"
+    "dev": "tsx watch src/server.ts",
+    "knex": "node --import tsx ./node_modules/knex/bin/cli.js"
   },
   "keywords": [],
   "author": "Rafael Neves (nevesrafael.dev@gmail.com)",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.7",
+    "sqlite3": "^5.1.7",
     "tsx": "^4.7.3",
     "typescript": "^5.4.5"
   },
