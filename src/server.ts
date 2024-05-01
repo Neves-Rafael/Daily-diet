@@ -1,13 +1,11 @@
-import fastify from "fastify";
-import { knex }from "./database";
-import { env } from "./env";
+import fastify from "fastify"
+import { env } from "./env"
+import { userRoutes } from "./routes/users"
+import { mealRoutes } from "./routes/meals"
 
 const app = fastify()
-
-app.get("/hello", async() => {
-  const test = await knex("sqlite_schema").select("*")
-  return test
-})
+app.register(userRoutes, { prefix: "user"})
+app.register(mealRoutes, { prefix: "meal"})
 
 app.listen({
   port: env.PORT

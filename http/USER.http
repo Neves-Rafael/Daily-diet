@@ -1,0 +1,22 @@
+POST http://localhost:3333/user/signup
+Content-Type: application/json
+
+{ 
+  "name": "rafael",
+  "email": "abc@gmaail.com",
+  "password": "12345"
+}
+
+###
+
+POST http://localhost:3333/user/signin
+Content-Type: application/json
+
+{ 
+  "email": "abc@gmaail.com",
+  "password": "12345"
+}
+
+###
+
+DELETE http://localhost:3333/user/logout
