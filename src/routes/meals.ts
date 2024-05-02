@@ -2,9 +2,10 @@ import { randomUUID } from "node:crypto";
 import { FastifyInstance } from "fastify";
 import { z } from "zod"
 import { knex } from "../database";
+import { checkSessionId } from "../middlewares/check-session-id";
 
 export async function mealRoutes(app: FastifyInstance){
-  app.post("/", async (request, reply) => {
+  app.post("/",{ preHandler: [checkSessionId]}, async (request, reply) => {
     const createMealSchema = z.object({
       name: z.string(),
       description: z.string(),
@@ -13,8 +14,11 @@ export async function mealRoutes(app: FastifyInstance){
 
     const { name, description, diet} = createMealSchema.parse(request.body)
 
+    const { sessionId } = request.cookies
+    console.log(sessionId)
+
     await knex("meal").insert({
-      user_id: randomUUID(),
+      user_id: sessionId,
       name,
       description,
       diet,

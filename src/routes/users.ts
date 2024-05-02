@@ -41,12 +41,23 @@ export async function userRoutes(app: FastifyInstance){
       password: z.string(),
     })
 
+    
     const { email, password } = createUserSchema.parse(request.body)
-
+    
     const verifyUserExist = await knex("users").where({ email }).first()
-
+    
     if(!verifyUserExist){
       return reply.status(400).send("User not found!")
+    }
+
+    let sessionId = request.cookies.sessionId
+
+    if(!sessionId){
+      sessionId = verifyUserExist.id
+      reply.cookie("sessionId", sessionId, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 15, //15 days
+      })
     }
 
     const passwordMatch = await compare(password, verifyUserExist.password)
@@ -58,7 +69,9 @@ export async function userRoutes(app: FastifyInstance){
     return reply.status(201).send()
   })
 
-  app.delete("/logout", async () => {
-    //Remove user permission
+  app.delete("/logout", async (request, reply) => {
+    let sessionId = request.cookies.sessionId
+
+    return reply.clearCookie("sessionId").send(sessionId)
   })
 }
