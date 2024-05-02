@@ -1,3 +1,4 @@
+// Create meal
 POST http://localhost:3333/meal
 Content-Type: application/json
 
@@ -9,8 +10,24 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3333/meal/4
+// Search specific meal
+GET http://localhost:3333/meal/3
 
 ###
 
+// Search all meals
+GET http://localhost:3333/meal
+
+###
+
+// Delete meal
 DELETE http://localhost:3333/meal/2
+
+###
+
+PUT http://localhost:3333/meal/4
+Content-Type: application/json
+
+{
+  "name": "test update"
+}

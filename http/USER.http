@@ -1,3 +1,4 @@
+// Create User
 POST http://localhost:3333/user/signup
 Content-Type: application/json
 
@@ -9,6 +10,7 @@ Content-Type: application/json
 
 ###
 
+//Login with cookies
 POST http://localhost:3333/user/signin
 Content-Type: application/json
 
@@ -19,4 +21,5 @@ Content-Type: application/json
 
 ###
 
+// Logout
 DELETE http://localhost:3333/user/logout

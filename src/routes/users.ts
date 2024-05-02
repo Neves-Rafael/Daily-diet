@@ -50,15 +50,17 @@ export async function userRoutes(app: FastifyInstance){
       return reply.status(400).send("User not found!")
     }
 
-    let sessionId = request.cookies.sessionId
+    reply.clearCookie("sessionId")
 
-    if(!sessionId){
-      sessionId = verifyUserExist.id
-      reply.cookie("sessionId", sessionId, {
-        path: "/",
-        maxAge: 60 * 60 * 24 * 15, //15 days
-      })
-    }
+    let { sessionId } = request.cookies
+
+    sessionId = verifyUserExist.id
+    
+    reply.cookie("sessionId", sessionId, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 15, //15 days
+    })
+    
 
     const passwordMatch = await compare(password, verifyUserExist.password)
 
