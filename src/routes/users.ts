@@ -27,8 +27,8 @@ export async function userRoutes(app: FastifyInstance){
       name,
       email,
       password: passwordHash,
-      updated_at: new Date(),
-      created_at: new Date(),
+      updated_at: new Date().toString(),
+      created_at: new Date().toString(),
     }).returning(["id", "name", "email"])
 
     
@@ -45,7 +45,7 @@ export async function userRoutes(app: FastifyInstance){
 
     const verifyUserExist = await knex("users").where({ email }).first()
 
-    if(verifyUserExist.length === 0){
+    if(!verifyUserExist){
       return reply.status(400).send("User not found!")
     }
 

@@ -5,21 +5,21 @@ import { knex } from "../database";
 
 export async function mealRoutes(app: FastifyInstance){
   app.post("/", async (request, reply) => {
-    const mealSchema = z.object({
+    const createMealSchema = z.object({
       name: z.string(),
       description: z.string(),
       diet: z.boolean()
     })
 
-    const { name, description, diet} = mealSchema.parse(request.body)
+    const { name, description, diet} = createMealSchema.parse(request.body)
 
     await knex("meal").insert({
       user_id: randomUUID(),
       name,
       description,
       diet,
-      updated_at: new Date(),
-      created_at: new Date()
+      updated_at: new Date().toString(),
+      created_at: new Date().toString()
     })
 
     return reply.status(201).send()
@@ -27,11 +27,11 @@ export async function mealRoutes(app: FastifyInstance){
   })
 
   app.get("/:id", async (request, reply) => {
-    const idSchema = z.object({
+    const idParamsSchema = z.object({
       id: z.string(),
     })
 
-    const { id } = idSchema.parse(request.params)
+    const { id } = idParamsSchema.parse(request.params)
     
     const mealSearch = await knex("meal").where({ id }).first()
 
@@ -43,15 +43,19 @@ export async function mealRoutes(app: FastifyInstance){
   })
 
   app.get("/,", async () => {
+    const meals = await knex("meals").where({ id: 2 })
 
+    return {
+      meals
+    }
   })
 
   app.delete("/:id", async (request, reply) => {
-    const idSchema = z.object({
+    const idParamsSchema = z.object({
       id: z.string(),
     })
 
-    const { id } = idSchema.parse(request.params)
+    const { id } = idParamsSchema.parse(request.params)
     
     const mealSearch = await knex("meal").where({ id }).delete()
 
