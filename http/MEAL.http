@@ -2,5 +2,15 @@ POST http://localhost:3333/meal
 Content-Type: application/json
 
 {
-  
+  "name":"macarronada",
+  "description": "create test",
+  "diet": true
 }
+
+###
+
+GET http://localhost:3333/meal/4
+
+###
+
+DELETE http://localhost:3333/meal/2
