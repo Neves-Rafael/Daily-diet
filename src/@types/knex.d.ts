@@ -1,4 +1,5 @@
 import { knex } from "knex"
+import { boolean } from "zod"
 
 declare module "knex/types/tables" {
   export interface Tables {
@@ -15,7 +16,7 @@ declare module "knex/types/tables" {
       user_id: string
       name: string
       description: string
-      diet: boolean
+      diet: number
       updated_at: string
       created_at: string
     }

@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "name":"macarronada",
   "description": "create test",
-  "diet": true
+  "diet": 0
 }
 
 ###
@@ -25,9 +25,15 @@ DELETE http://localhost:3333/meal/2
 
 ###
 
+// Update Meal
 PUT http://localhost:3333/meal/4
 Content-Type: application/json
 
 {
   "name": "test update"
 }
+
+###
+
+// User Summary
+GET http://localhost:3333/meal/summary

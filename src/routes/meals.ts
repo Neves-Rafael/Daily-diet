@@ -9,7 +9,7 @@ export async function mealRoutes(app: FastifyInstance){
     const createMealSchema = z.object({
       name: z.string(),
       description: z.string(),
-      diet: z.boolean()
+      diet: z.number()
     })
 
     const { name, description, diet } = createMealSchema.parse(request.body)
@@ -80,7 +80,7 @@ export async function mealRoutes(app: FastifyInstance){
     const mealsUpdateSchema = z.object({
       name: z.string().optional(),
       description: z.string().optional(),
-      diet: z.boolean().optional()
+      diet: z.number().optional()
     })
 
     const { id } = idSchema.parse(request.params)
@@ -114,7 +114,34 @@ export async function mealRoutes(app: FastifyInstance){
 
   })
 
-  app.get("/summary",{ preHandler: [checkSessionId] },  async () => {
+  app.get("/summary",{ preHandler: [checkSessionId] },  async (request, reply) => {
+    const { sessionId } = request.cookies
 
+    const summaryUserResult = await knex("meal").where({user_id: sessionId})
+
+    let inDiet = 0
+    let outDiet = 0
+    let dietSequence = 0
+    let count = 0
+
+    summaryUserResult.map((meal) => {
+      if(meal.diet === 1){
+        count++
+        inDiet++
+        if(count > dietSequence){
+          dietSequence = count
+        }
+      } else {
+        outDiet++
+        count = 0
+      }
+    })
+
+    return reply.status(200).send({
+      "total-meals": summaryUserResult.length,
+      "in-diet": inDiet,
+      "out-diet": outDiet,
+      "diet-sequence": dietSequence
+    })
   })
 }
