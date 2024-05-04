@@ -3,7 +3,7 @@ import { app } from "../src/app"
 import request from "supertest"
 import { execSync } from "node:child_process"
 
-describe.skip("User routes", () => {
+describe("User routes", () => {
   beforeAll( async () => {
     await app.ready()
   })
