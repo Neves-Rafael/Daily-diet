@@ -14,11 +14,11 @@ export async function userRoutes(app: FastifyInstance){
 
     const { name, email, password } = createUserSchema.parse(request.body)
 
-    // const verifyUserExist = await knex("users").where({ email }).first()
+    const verifyUserExist = await knex("users").where({ email }).first()
 
-    // if(verifyUserExist.length > 0){
-    //   return reply.status(400).send("Email already used, try another email!")
-    // }
+    if(verifyUserExist){
+      return reply.status(400).send("Email already used, try another email!")
+    }
 
     const passwordHash = await hash(password, 6)
 
@@ -31,7 +31,6 @@ export async function userRoutes(app: FastifyInstance){
       created_at: new Date().toString(),
     }).returning(["id", "name", "email"])
 
-    
     return reply.status(201).send(user)
   })
 
@@ -41,7 +40,6 @@ export async function userRoutes(app: FastifyInstance){
       password: z.string(),
     })
 
-    
     const { email, password } = createUserSchema.parse(request.body)
     
     const verifyUserExist = await knex("users").where({ email }).first()
@@ -61,7 +59,6 @@ export async function userRoutes(app: FastifyInstance){
       maxAge: 60 * 60 * 24 * 15, //15 days
     })
     
-
     const passwordMatch = await compare(password, verifyUserExist.password)
 
     if(!passwordMatch){
@@ -72,7 +69,7 @@ export async function userRoutes(app: FastifyInstance){
   })
 
   app.delete("/logout", async (request, reply) => {
-    let sessionId = request.cookies.sessionId
+    let { sessionId } = request.cookies
 
     return reply.clearCookie("sessionId").send(sessionId)
   })

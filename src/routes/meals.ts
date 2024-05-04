@@ -117,7 +117,7 @@ export async function mealRoutes(app: FastifyInstance){
   app.get("/summary",{ preHandler: [checkSessionId] },  async (request, reply) => {
     const { sessionId } = request.cookies
 
-    const summaryUserResult = await knex("meal").where({user_id: sessionId})
+    const summaryUserResult = await knex("meal").where({ user_id: sessionId })
 
     let inDiet = 0
     let outDiet = 0
