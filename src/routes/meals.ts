@@ -15,16 +15,16 @@ export async function mealRoutes(app: FastifyInstance){
     const { name, description, diet } = createMealSchema.parse(request.body)
     const { sessionId } = request.cookies
 
-    await knex("meal").insert({
+    const meal = await knex("meal").insert({
       user_id: sessionId,
       name,
       description,
       diet,
       updated_at: new Date().toString(),
       created_at: new Date().toString()
-    })
+    }).returning("*")
 
-    return reply.status(201).send()
+    return reply.status(201).send(meal)
   })
 
   app.get("/:id",{ preHandler: [checkSessionId] }, async (request, reply) => {
@@ -87,8 +87,6 @@ export async function mealRoutes(app: FastifyInstance){
     const { name, description, diet } = mealsUpdateSchema.parse(request.body)
     const { sessionId } = request.cookies
 
-    console.log(id, name, description, diet)
-
     const verifyMeal = await knex("meal").where({
       id, user_id: sessionId
     }).first()
@@ -99,16 +97,17 @@ export async function mealRoutes(app: FastifyInstance){
       })
     }
 
-    await knex("meal").where({
+    const meal = await knex("meal").where({
       id, user_id: sessionId
     }).update({
       name: name ? name : verifyMeal.name,
       description: description ? description : verifyMeal.description,
       diet: diet ? diet : verifyMeal.diet,
       updated_at: new Date().toString(),
-    })
+    }).returning("*")
 
     return reply.status(200).send({
+      meal,
       message: "Update has successful!"
     })
 
@@ -138,10 +137,10 @@ export async function mealRoutes(app: FastifyInstance){
     })
 
     return reply.status(200).send({
-      "total-meals": summaryUserResult.length,
-      "in-diet": inDiet,
-      "out-diet": outDiet,
-      "diet-sequence": dietSequence
+      total_meals: summaryUserResult.length,
+      in_diet: inDiet,
+      out_diet: outDiet,
+      diet_sequence: dietSequence
     })
   })
 }

@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { FastifyInstance } from "fastify";
 import { z } from "zod"
 import { knex } from "../database";
-import { hash, compare} from "bcryptjs"
+import { hash, compare } from "bcryptjs"
 
 export async function userRoutes(app: FastifyInstance){
   app.post("/signup", async (request, reply) => {
